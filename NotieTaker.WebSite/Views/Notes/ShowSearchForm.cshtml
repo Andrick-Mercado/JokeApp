@@ -7,17 +7,12 @@
         <form asp-action="ShowSearchForm">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="NoteFront" class="control-label"></label>
-                <input asp-for="NoteFront" class="form-control" />
-                <span asp-validation-for="NoteFront" class="text-danger"></span>
-            </div>
-            <div class="form-group">
                 <label asp-for="NoteBack" class="control-label"></label>
                 <input asp-for="NoteBack" class="form-control" />
                 <span asp-validation-for="NoteBack" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Search" class="btn btn-primary" />
             </div>
         </form>
     </div>
