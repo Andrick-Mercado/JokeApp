@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using NotieTaker.Data;
 using NotieTaker.Models;
@@ -30,6 +28,14 @@ namespace NotieTaker.Controllers
         {
             return View();
         }
+        
+        // POST Notes/ShowSearchResults
+        public async Task<IActionResult> ShowSearchResults(string SearchPhrase)
+        {
+            return View("Index",await _context.Note.
+                Where(j => j.NoteFront.Contains(SearchPhrase)).
+                ToListAsync());
+        }
 
         // GET: Notes/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -50,6 +56,7 @@ namespace NotieTaker.Controllers
         }
 
         // GET: Notes/Create
+        [Authorize]
         public IActionResult Create()
         {
             return View();
@@ -58,6 +65,7 @@ namespace NotieTaker.Controllers
         // POST: Notes/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,NoteFront,NoteBack")] Notes note)
@@ -66,12 +74,14 @@ namespace NotieTaker.Controllers
             {
                 _context.Add(note);
                 await _context.SaveChangesAsync();
+                TempData["success"] = "Category created successfully";
                 return RedirectToAction(nameof(Index));
             }
             return View(note);
         }
 
         // GET: Notes/Edit/5
+        [Authorize]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -90,6 +100,7 @@ namespace NotieTaker.Controllers
         // POST: Notes/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,NoteFront,NoteBack")] Notes note)
@@ -117,12 +128,14 @@ namespace NotieTaker.Controllers
                         throw;
                     }
                 }
+                TempData["success"] = "Category Updated successfully";
                 return RedirectToAction(nameof(Index));
             }
             return View(note);
         }
 
         // GET: Notes/Delete/5
+        [Authorize]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -143,11 +156,13 @@ namespace NotieTaker.Controllers
         // POST: Notes/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var note = await _context.Note.FindAsync(id);
             _context.Note.Remove(note);
             await _context.SaveChangesAsync();
+            TempData["success"] = "Category Deleted successfully";
             return RedirectToAction(nameof(Index));
         }
 
